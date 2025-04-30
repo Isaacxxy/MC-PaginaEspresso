@@ -22,15 +22,22 @@ enum Category {
   CHILDRENS_LITERATURE
 }
 
+enum BookStatus {
+  APPROVED
+  REJECTED
+  PENDING
+  OUT_OF_STOCK
+}
+
 model Book {
-  idBook      Int      @id @default(autoincrement())
+  idBook      Int        @id @default(autoincrement())
   title       String
   author      String
   publisher   String
-  publishDate DateTime
+  publishDate String
   pages       Int
   language    String
-  isValid     Boolean
+  isValid     BookStatus
   price       Float
   rating      Int
   imageUrl    String
@@ -38,46 +45,52 @@ model Book {
   stock       Int
   category    Category
   issold      Boolean
-  reviews     Review[] 
+  reviews     Review[]
+  Reports     Reports[]
+  idUser      String
 }
 
 model Coupon {
-  idCoupon        Int    @id @default(autoincrement())
-  imageUrl        String
-  title           String
-  pointsRequired  Int
-  discount        Float
+  id             Int      @id @default(autoincrement())
+  title          String
+  pointsRequired Int
+  discount       Float
+  status         String
+  barcode        String
+  bgTop          String
+  bgBottom       String
+  Wallet         Wallet[]
 }
 
 model Drink {
-  id          Int          @id @default(autoincrement())
+  id          Int              @id @default(autoincrement())
   name        String
   category    DrinkCategory
   description String
-  ingredients String[]     
+  ingredients String[]
   imageUrl    String
   temperature DrinkTemperature
-  rating      Float?       
-  sizes       DrinkSize[]      
+  rating      Float?
+  sizes       DrinkSize[]
 }
 
 model DrinkSize {
-  id          Int     @id @default(autoincrement())
-  drink       Drink   @relation(fields: [drinkId], references: [id])
-  drinkId     Int
-  size        SizeType
-  price       Float
-  stock       Int
+  id           Int      @id @default(autoincrement())
+  drink        Drink    @relation(fields: [drinkId], references: [id])
+  drinkId      Int
+  size         SizeType
+  price        Float
+  stock        Int
   sugarContent Float?
+  points      Int
 }
 
 model Review {
-  id       Int    @id @default(autoincrement())
-  book    Book  @relation(fields: [bookId], references: [idBook])
+  id      Int    @id @default(autoincrement())
+  book    Book   @relation(fields: [bookId], references: [idBook])
   bookId  Int
-  user     String
-  comment  String
-  rating   Int     
+  user    String
+  comment String
 }
 
 enum DrinkCategory {
@@ -89,7 +102,7 @@ enum DrinkCategory {
   Coffee_Frappuccino
   Cream_Frappuccino
   Teavana_Milk_Tea
-  Teavan_Iced_Tea
+  Teavana_Iced_Tea
   Teavana_Hot_Teas
   Waters_Juices
 }
@@ -103,4 +116,44 @@ enum SizeType {
   small
   medium
   large
+}
+
+model Wallet {
+  idUser   String
+  coupon   Coupon @relation(fields: [idCoupon], references: [id])
+  idCoupon Int
+  quantity Int
+
+  @@id([idUser, idCoupon])
+}
+
+model Order {
+  idOrder     Int      @id
+  idUser      String
+  amount      Float
+  timestamp   DateTime @default(now())
+  productList String
+}
+
+model UserPoints {
+  id     Int    @id @default(autoincrement())
+  idUser String @unique
+  points Int
+}
+
+enum ReportType {
+  INAPPROPRIATE_CONTENT
+  COPYRIGHT_ISSUE
+  INCORRECT_INFORMATION
+  SPAM
+  OTHER
+}
+
+model Reports {
+  idReport  Int        @id @default(autoincrement())
+  idBook    Int
+  book      Book       @relation(fields: [idBook], references: [idBook])
+  type      ReportType
+  content   String
+  timestamp DateTime   @default(now())
 }

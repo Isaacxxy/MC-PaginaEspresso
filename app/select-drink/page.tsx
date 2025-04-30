@@ -1,10 +1,10 @@
 'use client'
-
+import react, { useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { useUser } from "@/context/UserContext"
 import { useRouter } from "next/navigation"
 import { DrinkSelector } from "./_components/DrinkSelector"
-import { drinks } from "@/data"
+// import { drinks } from "@/data"
 import { useState } from "react"
 import { Drink } from "@/types/type"
 
@@ -14,6 +14,25 @@ export default function SelectDrinkPage() {
   const [selections, setSelections] = useState<
     { drink: Drink; size: keyof Drink['sizes']; quantity: number }[]
   >([])
+  const [drinks, setDrinks] = useState<Drink[]>([]);
+  const [loading, setLoading] = useState(true);
+  const fetchDrinks = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/drinks");
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      setDrinks(data);
+    } catch (error) {
+      console.error("Failed to fetch books:", error);
+    }
+  };
+  useEffect(() => {
+    fetchDrinks();
+  }, []);
 
   const handleProceedToCheckout = () => {
     selections.forEach(selection => {

@@ -26,6 +26,7 @@ const Row = ({ row, coupons, onApplyCoupons }: RowProp & { onApplyCoupons?: () =
       deductPoints(totalPointsRequired);
       onApplyCoupons?.();
     }
+    console.log("user in rewards>>", user)
   };
 
   return (

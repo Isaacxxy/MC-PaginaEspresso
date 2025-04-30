@@ -181,7 +181,7 @@ export default function BookEditForm({
                     <Rating
                       name="rating"
                       value={rating}
-                      precision={0.5}
+                      precision={1}
                       onChange={(_, newValue) => {
                         if (newValue !== null) {
                           setRating(newValue)

@@ -108,9 +108,8 @@ const BookCard = ({ book }: BookCardProps) => {
                   opacity: [1, 0.8, 0],
                 }}
                 transition={{ duration: 0.7 }}
-                className={`absolute -top-2 -right-2 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center ${
-                  animationType === "add" ? "bg-green-500" : "bg-yellow-500"
-                }`}
+                className={`absolute -top-2 -right-2 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center ${animationType === "add" ? "bg-green-500" : "bg-yellow-500"
+                  }`}
               >
                 {animationType === "add" ? "+1" : <X size={12} />}
               </motion.span>

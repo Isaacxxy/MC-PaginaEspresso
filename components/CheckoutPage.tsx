@@ -16,7 +16,7 @@ const CheckoutPage = ({ amount, appliedCouponId }: { amount: number, appliedCoup
   const [errorMessage, setErrorMessage] = useState<string>();
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
-  const { user, removeFromWallet } = useUser();
+  const { user, removeFromWallet, addPoints, calculateTotalDrinkPoints } = useUser();
   const router = useRouter();
 
   useEffect(() => {
@@ -40,6 +40,7 @@ const CheckoutPage = ({ amount, appliedCouponId }: { amount: number, appliedCoup
     }
 
     const { error: submitError } = await elements.submit();
+    const hasDrink = user.cart.some(item => item.itemType === "drink");
 
     if (submitError) {
       setErrorMessage(submitError.message);
@@ -47,25 +48,11 @@ const CheckoutPage = ({ amount, appliedCouponId }: { amount: number, appliedCoup
       return;
     }
 
-    // const { error } = await stripe.confirmPayment({
-    //   elements,
-    //   clientSecret,
-    //   confirmParams: {
-    //     return_url: `http://www.localhost:3000/payment-success`,
-    //   },
-    // });
-
-    // if (error) {
-    //   // This point is only reached if there's an immediate error when
-    //   // confirming the payment. Show the error to your customer (for example, payment details incomplete)
-    //   setErrorMessage(error.message);
-    // } else {
-    //   // The payment UI automatically closes with a success animation.
-    //   // Your customer is redirected to your `return_url`.
-    // }
-
-    router.push(`/payment-success?amount=${amount}`);
+    hasDrink && addPoints(calculateTotalDrinkPoints(user.cart));
+    console.log("calculateTotalDrinkPoints >>", calculateTotalDrinkPoints(user.cart))
+    console.log("Points after payement >>", user.points);
     setLoading(false);
+    router.push(`/payment-success?amount=${amount}`);
     appliedCouponId &&
       removeFromWallet(appliedCouponId);
 
@@ -96,7 +83,7 @@ const CheckoutPage = ({ amount, appliedCouponId }: { amount: number, appliedCoup
         disabled={!stripe || loading}
         className="text-white w-fit mx-auto p-5 bg-black mt-2 rounded-md font-bold disabled:opacity-50 disabled:animate-pulse"
       >
-        {!loading ? `Pay $${amount}` : "Processing..."}
+        {!loading ? `Pay here` : "Processing..."}
       </button>
     </form>
   );

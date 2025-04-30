@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import CheckoutPage from "@/components/CheckoutPage";
 import convertToSubcurrency from "@/lib/convertToSubcurrency";
@@ -63,10 +63,7 @@ export default function Home() {
   console.log("totalDrinkPrice >>", totalDrinkPrice);
   console.log("bookItems >>", bookItems);
   console.log("drinkItems >>", drinkItems);
-
-
-  let amount = (totalBookPrice + totalDrinkPrice).toFixed(2);
-
+  const [amount, setAmount] = useState((totalBookPrice + totalDrinkPrice).toFixed(2));
   const [selectedCouponId, setSelectedCouponId] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const calculateTotalWithCoupon = () => {
@@ -97,8 +94,7 @@ export default function Home() {
 
   const handleApplyCoupon = () => {
     if (!selectedCouponId) return;
-    amount = finalAmount.toFixed(2);
-
+    setAmount(finalAmount.toFixed(2));
     setIsDialogOpen(false);
 
     toast({

@@ -90,14 +90,6 @@ export type CartItem =
       quantity: number;
     };
 
-export type CouponType = {
-  idCoupon: number;
-  imageUrl: string;
-  title: string;
-  pointsRequired: number;
-  discount: number;
-};
-
 export type BookStatus = "pending" | "rejected" | "approved" | "out of stock";
 
 export interface Book {
@@ -129,6 +121,24 @@ export interface Book {
     | "Children's Literature"
     | "Young Adult"
     | "Non-Fiction";
-  isSold: boolean;
-  reviews?: { user: string; comment: string; rating: number }[];
+  issold: boolean;
+  reviews?: { user: string; comment: string }[];
+  idUser: string;
+  reports?: Report[];
 }
+
+export type ReportType =
+  | ""
+  | "Inappropriate Content"
+  | "Copy Right Issue"
+  | "Incorrecte Informations"
+  | "Spam"
+  | "Other";
+
+export type Report = {
+  id: number;
+  idBook: number;
+  type: ReportType;
+  timestamp: Date;
+  Content: string;
+};

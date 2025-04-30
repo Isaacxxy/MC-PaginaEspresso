@@ -79,11 +79,10 @@ const CartPage = () => {
                 {bookItems.map((item) => (
                   <div key={item.book.idBook} className="flex gap-4 p-4 border rounded-lg hover:shadow-md transition-shadow">
                     <div className="relative w-24 h-32 flex-shrink-0">
-                      <Image
+                      <img
                         src={item.book.imageUrl}
                         alt={item.book.title}
-                        fill
-                        className="object-cover rounded"
+                        className="h-full object-cover rounded"
                       />
                     </div>
                     <div className="flex-1">

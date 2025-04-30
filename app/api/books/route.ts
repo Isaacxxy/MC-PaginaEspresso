@@ -2,14 +2,16 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import fs from "fs";
 import path from "path";
-import { Category } from "@prisma/client";
+import { Category, BookStatus } from "@prisma/client";
 
-//OK
 export async function GET() {
   try {
     const books = await prisma.book.findMany({
       where: {
-        isValid: true,
+        isValid: "APPROVED",
+        stock: {
+          gt: 0,
+        },
       },
     });
     return NextResponse.json(books);
@@ -50,11 +52,13 @@ export async function POST(req: Request) {
     const publishDate = formData.get("publishDate") as string;
     const pages = formData.get("pages") as string;
     const language = formData.get("language") as string;
-    const isValid = formData.get("isValid") === "true";
+    const isValid = formData.get("isValid") as string;
     const stock = formData.get("stock") as string;
     const imageFile = formData.get("image") as File;
     const category = formData.get("category") as string;
     const issold = formData.get("issold") === "true";
+    const idUser = formData.get("idUser") as string;
+    console.log("idUser in formdata >>", idUser);
 
     const categoryMap: { [key: string]: Category } = {
       "Science Fiction": Category.SCIENCE_FICTION,
@@ -76,20 +80,21 @@ export async function POST(req: Request) {
 
     const newBook = await prisma.book.create({
       data: {
-        title: title,
-        author: author,
+        title: title.toUpperCase(),
+        author: author.toUpperCase(),
         rating: Number(rating),
         price: Number(price),
-        description: description,
-        publisher: publisher,
-        publishDate: new Date(publishDate),
+        description: description.toUpperCase(),
+        publisher: publisher.toUpperCase(),
+        publishDate: publishDate,
         pages: Number(pages),
-        language: language,
+        language: language.toUpperCase(),
         imageUrl: imageUrl,
-        isValid: Boolean(isValid),
+        isValid: isValid.toUpperCase() as BookStatus,
         stock: Number(stock),
         category: mappedCategory,
         issold: Boolean(issold),
+        idUser: idUser,
       },
     });
 

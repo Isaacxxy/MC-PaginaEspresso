@@ -6,7 +6,7 @@ export async function GET() {
   try {
     const drinks = await prisma.drink.findMany({
       include: {
-        sizes: true
+        sizes: true,
       },
     });
 

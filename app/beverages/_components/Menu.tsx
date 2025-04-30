@@ -1,8 +1,7 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Drink } from '@/types/type'
 import { NotebookTabsIcon, X } from 'lucide-react';
-import { drinks } from '@/data/index'
 import { Playfair_Display } from "next/font/google";
 import {
   Coffee,
@@ -25,6 +24,8 @@ import {
 import { GiCoffeeBeans, GiHoneypot } from "react-icons/gi";
 import { GiIceCube } from "react-icons/gi";
 import { TbSalt } from "react-icons/tb";
+
+
 
 
 
@@ -108,6 +109,24 @@ const getIngredientIcon = (ingredient: string) => {
 
 const Menu = () => {
   const [selectedDrink, setSelectedDrink] = useState<Drink | null>(null);
+  const [drinks, setDrinks] = useState<Drink[]>([]);
+  const fetchDrinks = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/drinks");
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      setDrinks(data);
+    } catch (error) {
+      console.error("Failed to fetch books:", error);
+    }
+  };
+  useEffect(() => {
+    fetchDrinks();
+  }, []);
 
   const groupedDrinks = drinks.reduce((acc, drink) => {
     acc[drink.category] = acc[drink.category] || [];
@@ -152,7 +171,12 @@ const Menu = () => {
                     <p className="mt-1 text-sm text-gray-500">{drink.description}</p>
                   </div>
                   <p className="text-sm font-bold text-gray-900">
-                    {drink.sizes.medium ? `$${drink.sizes.medium.price.toFixed(2)}` : drink.sizes.small ? `$${drink.sizes.small.price.toFixed(2)}` : `$${drink.sizes.large?.price.toFixed(2)}`}
+                    {(() => {
+                      const medium = drink.sizes.find(s => s.size === "medium");
+                      const small = drink.sizes.find(s => s.size === "small");
+                      const chosen = medium ?? small;
+                      return chosen ? `$${chosen.price.toFixed(2)}` : "N/A";
+                    })()}
                   </p>
                 </div>
                 <div className='absolute top-4 right-4'>
@@ -202,12 +226,12 @@ const Menu = () => {
                       <div className="text-right">Sugar</div>
                       <div className="text-right">Points</div>
                     </div>
-                    {Object.entries(selectedDrink.sizes).map(([size, details]) => (
-                      <div key={size} className="grid grid-cols-4 gap-4">
-                        <div className="uppercase">{size.charAt(0).toUpperCase() + size.slice(1)}</div>
+                    {selectedDrink.sizes.map((details, i) => (
+                      <div key={i} className="grid grid-cols-4 gap-4">
+                        <div className="uppercase">{details.size}</div>
                         <div className="text-right">${details.price.toFixed(2)}</div>
                         <div className="text-right">{details.sugarContent}g</div>
-                        <div className="text-right text-zinc-500">{details.points} pts</div>
+                        <div className="text-right text-zinc-500">{details.points ? `${details.points} pts` : '—'}</div>
                       </div>
                     ))}
                   </div>

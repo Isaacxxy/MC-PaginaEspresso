@@ -88,11 +88,11 @@ export const FloatingNav = ({
             duration: 0.2,
           }}
           className={cn(
-            "container flex h-16 items-center sm:max-w-[88rem] mx-auto p-5",
+            "container flex h-16 items-center sm:max-w-[] mx-auto",
             className
           )}
         >
-          <h1 className="felx sm:hidden items-center justify-center space-x-2 text-2xl font-bold py-4 text-center dark:text-zinc-700 text-gray-100 mr-10 "></h1>
+          <h1 className="flex sm:hidden items-center justify-center space-x-2 text-2xl font-bold py-4 text-center dark:text-zinc-700 text-gray-100 mr-10 "></h1>
           <h1
             className={`hidden sm:flex items-center justify-center space-x-2 text-2xl font-bold py-4 text-center mr-10 ${playfair.className
               } ${pathname === "/"
@@ -204,15 +204,16 @@ export const FloatingNav = ({
             )}
             {!userId && (
               <div className="flex flex-row gap-2">
-                <div className="bg-black text-white text-sm p-2 rounded-lg">
+                <div className="bg-[#F2E1C1] text-[#3E3E3E] hover:bg-[#E1C99C]/90 text-base text-center font-semibold flex items-center justify-center gap-2 rounded-md px-4 py-1">
                   <SignInButton forceRedirectUrl={pathname} mode="redirect">
                     Login
                   </SignInButton>
                 </div>
-                <div className="bg-black text-white text-sm p-2 rounded-lg">
+                <div className="bg-[#6A8D73] text-white hover:bg-[#5C7A65]/90 text-base text-center font-semibold flex items-center justify-center gap-2 rounded-md px-4 py-1">
                   <SignUpButton forceRedirectUrl="/" mode="redirect">
                     Sign up
                   </SignUpButton>
+
                 </div>
               </div>
             )}
@@ -225,3 +226,4 @@ export const FloatingNav = ({
 //TODO: Add a search bar here
 //TODO: commande UI
 //TODO: ptr le filtrage
+

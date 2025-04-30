@@ -19,6 +19,8 @@ interface UserContextType {
   removeFromCart: (itemId: string, itemType: 'book' | 'drink', size?: keyof Drink['sizes']) => void;
   updateCartItem: (itemId: string, itemType: 'book' | 'drink', updates: Partial<Omit<CartItem, 'itemType'>>, size?: keyof Drink['sizes']) => void;
   clearCart: () => void;
+  calculateTotalDrinkPoints: (cart: CartItem[]) => number;
+
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined)
@@ -53,6 +55,16 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       points: prev.points - amount,
     }))
   }
+
+  const calculateTotalDrinkPoints = (cart: CartItem[]) => {
+    return cart.reduce((total, item) => {
+      if (item.itemType === 'drink') {
+        const drinkPoints = item.drink.sizes[item.size]?.points ?? 0;
+        return total + (drinkPoints * item.quantity);
+      }
+      return total;
+    }, 0);
+  };
 
   const addPoints = (amount: number) => {
     setUser(prev => ({
@@ -181,6 +193,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         removeFromCart,
         updateCartItem,
         clearCart,
+        calculateTotalDrinkPoints
       }}
     >
       {children}

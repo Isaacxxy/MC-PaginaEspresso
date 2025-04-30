@@ -92,14 +92,14 @@ const LandingPage = () => {
           </p>
           <div className="flex flex-row justify-center items-center gap-4">
             <div
-              onClick={() => router.push("/Library")}
+              onClick={() => router.push("/library")}
               className="bg-[#F2E1C1] text-black hover:bg-[#F2E1C1]/70 text-base text-center font-semibold flex flex-row-reverse items-center justify-center gap-2 rounded-md px-4 py-2 cursor-pointer"
             >
               Our Collection
               <TbBooks size={24} />
             </div>
             <div
-              onClick={() => router.push("/Library")}
+              onClick={() => router.push("/addBooks")}
               className="bg-[#D4B38A] text-black hover:bg-[#D4B38A]/70 text-base text-center font-semibold flex flex-row-reverse items-center justify-center gap-2 rounded-md px-4 py-2 cursor-pointer"
             >
               New Book
@@ -114,8 +114,8 @@ const LandingPage = () => {
           <p className="w-[100%] font-bold text-xl mb-4 md:mb-0 md:text-7xl mt-16 md:leading-[78px] text-center text-zinc-900">
             Frequently asked questions
           </p>
-          <div className="w-[922px]">
-            <Accordion type="multiple" className="w-full">
+          <div className="w-full">
+            <Accordion type="multiple" className="w-full text-lg">
               <AccordionItem value="item-1">
                 <AccordionTrigger>
                   What is the purpose of this website?
@@ -172,7 +172,7 @@ const LandingPage = () => {
           </p>
           <div
             onClick={() => router.push("/Library")}
-            className="bg-[#6A8D73] text-black hover:bg-[#6A8D73]/70 text-base text-center font-semibold flex flex-row-reverse items-center justify-center gap-2 rounded-md px-4 py-2 cursor-pointer"
+            className="bg-[#6A8D73] text-white hover:bg-[#6A8D73]/70 text-base text-center font-semibold flex flex-row-reverse items-center justify-center gap-2 rounded-md px-4 py-2 cursor-pointer"
           >
             Check our Menu
             <RiDrinks2Line size={18} />

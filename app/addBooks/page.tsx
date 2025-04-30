@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Book } from "@/types/type";
 import { FileUpload } from "@/components/ui/file-upload";
 import { Save, Check, ChevronsUpDown } from "lucide-react";
@@ -25,6 +25,7 @@ import Flag from "react-world-flags";
 import { languages } from "@/lib/languages";
 import toast, { Toaster } from "react-hot-toast";
 import { ClassNames } from "@emotion/react";
+import { useUser } from "@clerk/nextjs"
 
 const categories = [
   { code: 0, name: "" },
@@ -45,6 +46,7 @@ export default function AddBookPage(
   { className }
     : { className?: string }
 ) {
+  const { user } = useUser()
   const [image, setImage] = useState<File | null>(null);
   const [formData, setFormData] = useState<Book>({
     idBook: "",
@@ -58,10 +60,12 @@ export default function AddBookPage(
     pages: 0,
     language: "",
     imageUrl: "",
-    isValid: "pending",
+    isValid: `${user?.publicMetadata?.isAdmin ? "approved" : "pending"}`,
     stock: 1,
     category: "",
-    isSold: false,
+    issold: false,
+    idUser: user?.id || "",
+    reports: [],
   });
 
   const handleFileUpload = (files: File[]) => {
@@ -109,6 +113,7 @@ export default function AddBookPage(
     if (image) {
       formDataToSend.append("image", image);
     }
+    console.log("user in addbook>>", user)
 
     try {
       const res = await fetch("http://localhost:3000/api/books", {
@@ -148,7 +153,8 @@ export default function AddBookPage(
         isValid: "pending",
         stock: 1,
         category: "",
-        isSold: false,
+        issold: false,
+        idUser: "",
       });
       setImage(null);
     } catch (error) {
